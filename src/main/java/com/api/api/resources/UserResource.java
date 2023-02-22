@@ -29,5 +29,4 @@ public class UserResource {
     public ResponseEntity<User> findById(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(this.service.findById(id));
     }
-
 }
