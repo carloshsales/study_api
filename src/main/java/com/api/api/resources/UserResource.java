@@ -1,7 +1,9 @@
 package com.api.api.resources;
 
+import com.api.api.domain.dto.UserDTO;
 import com.api.api.domain.user.User;
 import com.api.api.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ import java.util.UUID;
 public class UserResource {
 
     @Autowired
+    private ModelMapper mapper;
+
+    @Autowired
     UserService service;
 
     @GetMapping("/")
@@ -26,7 +31,7 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable UUID id){
-        return ResponseEntity.status(HttpStatus.OK).body(this.service.findById(id));
+    public ResponseEntity<UserDTO> findById(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.map(service.findById(id), UserDTO.class));
     }
 }
