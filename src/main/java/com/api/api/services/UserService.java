@@ -36,6 +36,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void delete(UUID id){
+        findById(id);
+        repository.deleteById(id);
+    }
+
+    @Override
     public List<User> findAll(){
         return repository.findAll();
     }

@@ -14,6 +14,8 @@ public interface IUserService {
     User insert(UserDTO userDTO);
 
     User update(UserDTO userDTO);
+
+    void delete(UUID id);
     User findById(UUID id);
     List<User> findAll();
     Optional<User> findByEmail(String email);
