@@ -3,10 +3,10 @@ package com.api.api.services;
 import com.api.api.domain.dto.UserDTO;
 import com.api.api.domain.user.User;
 import com.api.api.repositories.UserRepository;
-import org.junit.jupiter.api.Assertions;
+
+import com.api.api.services.exceptions.ObjectNotFoundException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -61,16 +66,28 @@ class UserServiceTest {
 
     @Test
     void whenFindByIdThenReturnAnUserInstance() {
-        Mockito.when(repository.findById(Mockito.any(UUID.class))).thenReturn(optionalUser);
+        when(repository.findById(any(UUID.class))).thenReturn(optionalUser);
 
         User response = service.findById(ID);
 
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(User.class, response.getClass());
-        Assertions.assertEquals(ID, response.getId());
-        Assertions.assertEquals(NAME, response.getName());
-        Assertions.assertEquals(EMAIL, response.getEmail());
-        Assertions.assertEquals(PASSWORD, response.getPassword());
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException(){
+        when(repository.findById(any(UUID.class))).thenThrow(new ObjectNotFoundException("Object not found"));
+        try {
+            service.findById(ID);
+        }catch (Exception e){
+            assertNotNull(e.getMessage());
+            assertEquals(ObjectNotFoundException.class, e.getClass());
+            assertEquals("Object not found", e.getMessage());
+        }
     }
 
     @Test
