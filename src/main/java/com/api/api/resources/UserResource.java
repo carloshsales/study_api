@@ -27,7 +27,7 @@ public class UserResource {
     @Autowired
     IUserService service;
 
-    @GetMapping("/")
+    @GetMapping(value = "/")
     public ResponseEntity<List<UserDTO>> findAll(){
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -37,15 +37,21 @@ public class UserResource {
                         .collect(Collectors.toList()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(mapper.map(service.findById(id), UserDTO.class));
     }
 
-    @PostMapping("/")
+    @PostMapping(value = "/")
     public ResponseEntity<UserDTO> insert(@RequestBody UserDTO userDTO){
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path(ID).buildAndExpand(service.insert(userDTO).getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable UUID id, @RequestBody UserDTO userDTO){
+        userDTO.setId(id);
+        return ResponseEntity.ok().body(mapper.map(service.update(userDTO), UserDTO.class));
     }
 }

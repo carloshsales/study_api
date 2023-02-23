@@ -11,9 +11,12 @@ import java.util.UUID;
 @Service
 public interface IUserService {
 
-    User insert(UserDTO user);
+    User insert(UserDTO userDTO);
+
+    User update(UserDTO userDTO);
     User findById(UUID id);
     List<User> findAll();
     Optional<User> findByEmail(String email);
+
 
 }

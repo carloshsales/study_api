@@ -30,6 +30,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User update(UserDTO userDTO){
+        verifyUserExistByEmail(userDTO);
+        return repository.save(mapper.map(userDTO, User.class));
+    }
+
+    @Override
     public List<User> findAll(){
         return repository.findAll();
     }
@@ -46,7 +52,7 @@ public class UserService implements IUserService {
 
     private void verifyUserExistByEmail(UserDTO user){
         var findUser = findByEmail(user.getEmail());
-        if (findUser.isPresent()){
+        if (findUser.isPresent() && !findUser.get().getId().equals(user.getId())){
             throw new DataIntegrityViolationException("The email provided is already in use");
         }
     }
