@@ -4,6 +4,7 @@ import com.api.api.domain.dto.UserDTO;
 import com.api.api.domain.user.User;
 import com.api.api.repositories.UserRepository;
 
+import com.api.api.services.exceptions.DataIntegrityViolationException;
 import com.api.api.services.exceptions.ObjectNotFoundException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -61,6 +62,19 @@ class UserServiceTest {
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenInsertUserThenReturnDataIntegrityViolationException() {
+        when(repository.save(any())).thenThrow(new DataIntegrityViolationException("The email provided is already in use"));
+
+        try{
+            service.insert(userDTO);
+        }catch (Exception e){
+            assertNotNull(e.getMessage());
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("The email provided is already in use", e.getMessage());
+        }
     }
 
     @Test
