@@ -32,6 +32,7 @@ class UserServiceTest {
     public static final String EMAIL = "test@class.mock";
     public static final String PASSWORD = "123";
     public static final String THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE = "The email provided is already in use";
+    public static final String OBJECT_NOT_FOUND = "Object not found";
     @InjectMocks
     private UserService service;
 
@@ -115,7 +116,18 @@ class UserServiceTest {
         verify(repository, times(1)).deleteById(any(UUID.class));
     }
 
+    @Test
+    void deleteWithObjectNotFoundException() {
+        when(repository.findById(any(UUID.class))).thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
 
+        try{
+            service.delete(ID);
+        }catch (Exception e){
+            assertNotNull(e.getMessage());
+            assertEquals(ObjectNotFoundException.class, e.getClass());
+            assertEquals(OBJECT_NOT_FOUND, e.getMessage());
+        }
+    }
 
     @Test
     void whenFindAllThenReturnAnListOfUsers() {
@@ -148,7 +160,7 @@ class UserServiceTest {
 
     @Test
     void whenFindByIdThenReturnAnObjectNotFoundException(){
-        when(repository.findById(any(UUID.class))).thenThrow(new ObjectNotFoundException("Object not found"));
+        when(repository.findById(any(UUID.class))).thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
         try {
             service.findById(ID);
         }catch (Exception e){
