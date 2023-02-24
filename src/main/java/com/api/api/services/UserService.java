@@ -51,13 +51,8 @@ public class UserService implements IUserService {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object not found"));
     }
 
-    @Override
-    public Optional<User> findByEmail(String email){
-        return repository.findByEmail(email);
-    }
-
     private void verifyUserExistByEmail(UserDTO user){
-        var findUser = findByEmail(user.getEmail());
+        var findUser = repository.findByEmail(user.getEmail());
         if (findUser.isPresent() && !findUser.get().getId().equals(user.getId())){
             throw new DataIntegrityViolationException("The email provided is already in use");
         }

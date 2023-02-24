@@ -92,6 +92,19 @@ class UserServiceTest {
     }
 
     @Test
+    void whenUpdateUserThenReturnDataIntegrityViolationException() {
+        when(repository.save(any())).thenThrow(new DataIntegrityViolationException("The email provided is already in use"));
+
+        try{
+            service.update(userDTO);
+        }catch (Exception e){
+            assertNotNull(e.getMessage());
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("The email provided is already in use", e.getMessage());
+        }
+    }
+
+    @Test
     void delete() {
     }
 

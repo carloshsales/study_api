@@ -18,7 +18,5 @@ public interface IUserService {
     void delete(UUID id);
     User findById(UUID id);
     List<User> findAll();
-    Optional<User> findByEmail(String email);
-
 
 }
