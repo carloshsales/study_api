@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"password"})
 @ToString(exclude = {"password"})
 @Entity
 @Table(name = "td_user")

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +50,17 @@ class UserServiceTest {
     }
 
     @Test
-    void insert() {
+    void whenInsertUserThenReturnAnUserSuccess() {
+        when(repository.save(any())).thenReturn(user);
+
+        var response = service.insert(userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
@@ -61,14 +72,25 @@ class UserServiceTest {
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnAnListOfUsers() {
+        when(repository.findAll()).thenReturn(List.of(user));
+
+        var response = service.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(User.class, response.get(0).getClass());
+        assertEquals(ID, response.get(0).getId());
+        assertEquals(NAME, response.get(0).getName());
+        assertEquals(EMAIL, response.get(0).getEmail());
+        assertEquals(PASSWORD, response.get(0).getPassword());
     }
 
     @Test
     void whenFindByIdThenReturnAnUserInstance() {
         when(repository.findById(any(UUID.class))).thenReturn(optionalUser);
 
-        User response = service.findById(ID);
+        var response = service.findById(ID);
 
         assertNotNull(response);
         assertEquals(User.class, response.getClass());
@@ -88,10 +110,6 @@ class UserServiceTest {
             assertEquals(ObjectNotFoundException.class, e.getClass());
             assertEquals("Object not found", e.getMessage());
         }
-    }
-
-    @Test
-    void findByEmail() {
     }
 
     private void startUser(){
