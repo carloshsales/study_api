@@ -31,6 +31,7 @@ class UserServiceTest {
     public static final String NAME = "Test class";
     public static final String EMAIL = "test@class.mock";
     public static final String PASSWORD = "123";
+    public static final String THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE = "The email provided is already in use";
     @InjectMocks
     private UserService service;
 
@@ -66,14 +67,14 @@ class UserServiceTest {
 
     @Test
     void whenInsertUserThenReturnDataIntegrityViolationException() {
-        when(repository.save(any())).thenThrow(new DataIntegrityViolationException("The email provided is already in use"));
+        when(repository.save(any())).thenThrow(new DataIntegrityViolationException(THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE));
 
         try{
             service.insert(userDTO);
         }catch (Exception e){
             assertNotNull(e.getMessage());
             assertEquals(DataIntegrityViolationException.class, e.getClass());
-            assertEquals("The email provided is already in use", e.getMessage());
+            assertEquals(THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE, e.getMessage());
         }
     }
 
@@ -93,14 +94,14 @@ class UserServiceTest {
 
     @Test
     void whenUpdateUserThenReturnDataIntegrityViolationException() {
-        when(repository.save(any())).thenThrow(new DataIntegrityViolationException("The email provided is already in use"));
+        when(repository.save(any())).thenThrow(new DataIntegrityViolationException(THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE));
 
         try{
             service.update(userDTO);
         }catch (Exception e){
             assertNotNull(e.getMessage());
             assertEquals(DataIntegrityViolationException.class, e.getClass());
-            assertEquals("The email provided is already in use", e.getMessage());
+            assertEquals(THE_EMAIL_PROVIDED_IS_ALREADY_IN_USE, e.getMessage());
         }
     }
 
