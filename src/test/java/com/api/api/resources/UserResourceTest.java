@@ -71,7 +71,7 @@ class UserResourceTest {
     }
 
     @Test
-    void whenFindByIdThenReturnSuccess() {
+    void whenFindByIdThenReturnUser() {
         when(service.findById(any(UUID.class))).thenReturn(user);
         when(mapper.map(any(), any())).thenReturn(userDTO);
 
@@ -88,7 +88,14 @@ class UserResourceTest {
     }
 
     @Test
-    void insert() {
+    void whenInsertThenReturnInserted() {
+        when(service.insert(any(UserDTO.class))).thenReturn(user);
+
+        var response = resource.insert(userDTO);
+        assertNotNull(response);
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getHeaders().get("Location"));
     }
 
     @Test
